@@ -1,0 +1,17 @@
+﻿### Variables
+@baseUrl = http://localhost:5180
+@token = YOUR_JWT_TOKEN_HERE
+@exerciseId = YOUR_EXERCISE_ID_HERE
+
+### Obtener estadísticas completas del ejercicio (resumen semanal + sesiones recientes)
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/stats?recentLimit=5
+Authorization: Bearer {{token}}
+
+### Obtener estadísticas con límite de 10 sesiones recientes
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/stats?recentLimit=10
+Authorization: Bearer {{token}}
+
+### Obtener estadísticas con límite de 3 sesiones recientes
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/stats?recentLimit=3
+Authorization: Bearer {{token}}
+

@@ -1,0 +1,31 @@
+﻿### Variables
+@baseUrl = http://localhost:5180
+@token = YOUR_JWT_TOKEN_HERE
+@exerciseId = YOUR_EXERCISE_ID_HERE
+
+### ========== PROGRESS DATA ENDPOINTS ==========
+
+### 1. Obtener datos de progreso (semana)
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/progress?range=week
+Authorization: Bearer {{token}}
+
+### 2. Obtener datos de progreso (mes)
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/progress?range=month
+Authorization: Bearer {{token}}
+
+### ========== FORM ANALYSIS ENDPOINTS ==========
+
+### 3. Obtener análisis de técnica (semana)
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/form-analysis?range=week
+Authorization: Bearer {{token}}
+
+### 4. Obtener análisis de técnica (mes)
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/form-analysis?range=month
+Authorization: Bearer {{token}}
+
+### ========== GOALS ENDPOINTS ==========
+
+### 5. Obtener objetivos y metas
+GET {{baseUrl}}/api/trainingSessions/exercise/{{exerciseId}}/goals
+Authorization: Bearer {{token}}
+

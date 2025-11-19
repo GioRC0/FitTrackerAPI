@@ -1,0 +1,30 @@
+﻿### Variables
+@baseUrl = http://localhost:5180
+@token = YOUR_JWT_TOKEN_HERE
+
+### ========== USER PROFILE ENDPOINTS ==========
+
+### 1. Obtener perfil del usuario
+GET {{baseUrl}}/api/users/profile
+Authorization: Bearer {{token}}
+
+### 2. Obtener estadísticas del usuario
+GET {{baseUrl}}/api/users/profile/stats
+Authorization: Bearer {{token}}
+
+### 3. Obtener achievements/logros del usuario
+GET {{baseUrl}}/api/users/profile/achievements
+Authorization: Bearer {{token}}
+
+### 4. Actualizar perfil del usuario
+PUT {{baseUrl}}/api/users/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Giovanni",
+  "lastName": "Ramos",
+  "weight": 75.5,
+  "height": 180
+}
+
