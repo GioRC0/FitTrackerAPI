@@ -86,7 +86,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// --- 3. Otros Servicios ---
+// --- 3. CORS ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// --- 4. Otros Servicios ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -121,8 +132,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.WebHost.UseUrls("http://0.0.0.0:5180");
-
 var app = builder.Build();
 
 // Crear índices de MongoDB al iniciar la aplicación
@@ -144,6 +153,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
