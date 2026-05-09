@@ -1,0 +1,55 @@
+﻿services:
+  mongodb:
+    image: mongo:7.0
+    container_name: fittrackerdb
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - fittracker_net
+
+  api:
+    build:
+      context: ./FitTrackerAPI
+      dockerfile: Dockerfile
+    container_name: fittrackerapi
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MongoDbSettings__ConnectionString=mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:27017
+      - MongoDbSettings__DatabaseName=${MONGO_DATABASE}
+      - JwtSettings__Key=${JWT_KEY}
+      - JwtSettings__Issuer=${JWT_ISSUER}
+      - JwtSettings__Audience=${JWT_AUDIENCE}
+      - JwtSettings__AccessTokenExpirationMinutes=${JWT_ACCESS_EXPIRATION_MINUTES}
+      - JwtSettings__RefreshTokenExpirationDays=${JWT_REFRESH_EXPIRATION_DAYS}
+      - EmailSettings__SmtpServer=${EMAIL_SMTP_SERVER}
+      - EmailSettings__Port=${EMAIL_PORT}
+      - EmailSettings__Username=${EMAIL_USERNAME}
+      - EmailSettings__Password=${EMAIL_PASSWORD}
+      - EmailSettings__EnableSsl=${EMAIL_ENABLE_SSL}
+      - EmailSettings__SenderEmail=${EMAIL_SENDER}
+    depends_on:
+      - mongodb
+    networks:
+      - fittracker_net
+
+volumes:
+  mongo_data:
+
+networks:
+  fittracker_net:
+    driver: bridge
+
