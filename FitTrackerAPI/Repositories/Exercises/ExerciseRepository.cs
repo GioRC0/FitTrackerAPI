@@ -1,4 +1,5 @@
 ﻿using FitTrackerAPI.Models.Exercises;
+using FitTrackerAPI.Data;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -8,9 +9,9 @@ public class ExerciseRepository : IExerciseRepository
 {
     private readonly IMongoCollection<Exercise> _exercisesCollection;
 
-    public ExerciseRepository(IMongoDatabase database)
+    public ExerciseRepository(MongoDbContext context)
     {
-        _exercisesCollection = database.GetCollection<Exercise>("Exercises");
+        _exercisesCollection = context.Exercises;
     }
 
     public async Task<List<Exercise>> GetAllAsync() =>

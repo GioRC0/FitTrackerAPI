@@ -1,5 +1,6 @@
 ﻿﻿﻿using FitTrackerAPI.Models.Achievements;
-using FitTrackerAPI.Models.Training;
+  using FitTrackerAPI.Models.Exercises;
+  using FitTrackerAPI.Models.Training;
 using FitTrackerAPI.Models.UserInfo;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -17,6 +18,7 @@ public class MongoDbContext
     }
 
     public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+    public IMongoCollection<Exercise> Exercises => _database.GetCollection<Exercise>("Exercises");
     public IMongoCollection<TrainingSession> TrainingSessions => _database.GetCollection<TrainingSession>("TrainingSessions");
     public IMongoCollection<Achievement> Achievements => _database.GetCollection<Achievement>("Achievements");
     public IMongoCollection<UserAchievement> UserAchievements => _database.GetCollection<UserAchievement>("UserAchievements");
