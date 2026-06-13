@@ -32,4 +32,7 @@ public class User
 
     [BsonElement("validationCodes")]
     public ICollection<ValidationCode> ValidationCodes { get; set; } = new List<ValidationCode>();
+
+    [BsonElement("passwordResetTokens")]
+    public ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
 }

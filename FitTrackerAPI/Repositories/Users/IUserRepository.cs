@@ -9,6 +9,6 @@ public interface IUserRepository
     Task<User?> GetUserByIdAsync(string id);
     Task MarkUserAsVerifiedAsync(string userId);
     Task UpdateUserAsync(User user);
-    Task<User?> GetUserByRefreshTokenAsync(string token); // <-- Añadir esta línea
-
+    Task<User?> GetUserByRefreshTokenAsync(string token);
+    Task<User?> GetUserByPasswordResetTokenAsync(string token);
 }

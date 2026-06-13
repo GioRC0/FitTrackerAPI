@@ -49,4 +49,10 @@ public class UserRepository : IUserRepository
         var filter = Builders<User>.Filter.ElemMatch(u => u.RefreshTokens, rt => rt.Token == token);
         return _users.Find(filter).FirstOrDefaultAsync();
     }
+
+    public Task<User?> GetUserByPasswordResetTokenAsync(string token)
+    {
+        var filter = Builders<User>.Filter.ElemMatch(u => u.PasswordResetTokens, t => t.Token == token);
+        return _users.Find(filter).FirstOrDefaultAsync();
+    }
 }

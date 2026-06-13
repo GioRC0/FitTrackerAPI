@@ -9,6 +9,7 @@ using FitTrackerAPI.Repositories.Users;
 using FitTrackerAPI.Services.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 namespace FitTrackerAPI.Services.Auth;
 
@@ -171,9 +172,55 @@ public class AuthService : IAuthService
                 .FirstOrDefault(vc => vc.Code == dto.Code && vc.ExpiresAt > DateTime.UtcNow && !vc.IsUsed);
 
             if (validCode == null) return false;
-            
+
             validCode.IsUsed = true;
             user.IsVerified = true;
+            await _userRepository.UpdateUserAsync(user);
+
+            return true;
+        }
+
+        // --- RECUPERACIÓN DE CONTRASEÑA ---
+
+        public async Task SendPasswordResetLinkAsync(string email)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(email.ToLower());
+            // Respuesta genérica para no revelar si el email existe
+            if (user == null) return;
+
+            var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLower();
+            var expiration = DateTime.UtcNow.AddMinutes(30);
+
+            user.PasswordResetTokens.Add(new PasswordResetToken
+            {
+                Token = token,
+                ExpiresAt = expiration,
+                IsUsed = false
+            });
+            await _userRepository.UpdateUserAsync(user);
+
+            var apiBaseUrl = _configuration["AppSettings:ApiBaseUrl"] ?? "http://localhost:5000";
+            var resetLink = $"{apiBaseUrl}/api/auth/reset-password?token={token}";
+
+            await _emailService.SendEmailAsync(
+                user.Username,
+                "Recuperación de contraseña",
+                $"Haz clic en el siguiente enlace para restablecer tu contraseña (válido por 30 minutos):\n\n{resetLink}"
+            );
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
+        {
+            var user = await _userRepository.GetUserByPasswordResetTokenAsync(dto.Token);
+            if (user == null) return false;
+
+            var resetToken = user.PasswordResetTokens
+                .FirstOrDefault(t => t.Token == dto.Token && t.IsActive);
+
+            if (resetToken == null) return false;
+
+            resetToken.IsUsed = true;
+            user.PasswordHash = HashPassword(dto.NewPassword);
             await _userRepository.UpdateUserAsync(user);
 
             return true;
